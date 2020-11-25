@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1">
+
+    <TextView
+        android:id="@+id/codist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="@string/codist"
+        android:textColor="#3F51B5"
+        android:textSize="55sp"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/logo"-->
+    <!--        android:layout_width="262dp"-->
+    <!--        android:layout_height="139dp"-->
+    <!--        android:layout_alignTop="@+id/editProfile"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="64dp"-->
+    <!--        android:layout_marginEnd="49dp"-->
+    <!--        android:src="@drawable/logo" />-->
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="334dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/codist"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint="@string/email"
+        android:textAlignment="center"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="18sp"
+        android:typeface="monospace" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="334dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="18sp"
+        android:typeface="monospace" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#3F51B5"
+        android:hint="@string/login"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/register"
+        android:layout_width="68dp"
+        android:layout_height="33dp"
+        android:layout_alignTop="@+id/login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="145dp"
+        android:text="@string/register"
+        android:textAlignment="center"
+        android:textColor="#3F51B5"
+        android:textSize="18sp" />
+
+</RelativeLayout>

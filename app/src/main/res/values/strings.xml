@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CoDist</string>
+    <string name="codist">CoDist</string>
+    <string name="email">e-posta</string>
+    <string name="password">şifre</string>
+    <string name="login">giriş</string>
+    <string name="register">üye ol</string>
 </resources>

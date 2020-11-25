@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background2">
+
+    <Button
+        android:id="@+id/backReg"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/back" />
+
+    <EditText
+        android:id="@+id/emailReg"
+        android:layout_width="290dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/surnameReg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint=" E-Posta"
+        android:textAlignment="viewStart"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/primary_text_dark"
+        android:textSize="13sp"
+        android:typeface="monospace" />
+
+    <EditText
+        android:id="@+id/passwordReg"
+        android:layout_width="290dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/emailReg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint=" Şifre"
+        android:textAlignment="viewStart"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/primary_text_dark"
+        android:textSize="13sp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/registerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="YENİ ÜYE"
+        android:textColor="#3F51B5"
+        android:textSize="25sp"
+        android:typeface="monospace" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/logo"-->
+    <!--        android:layout_width="140dp"-->
+    <!--        android:layout_height="140dp"-->
+    <!--        android:layout_alignTop="@+id/editProfile"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="40dp"-->
+    <!--        android:background="@drawable/logo" />-->
+
+    <EditText
+        android:id="@+id/nameReg"
+        android:layout_width="290dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/registerTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint=" İsim"
+        android:textAlignment="viewStart"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/primary_text_dark"
+        android:textSize="13sp"
+        android:typeface="monospace" />
+
+    <EditText
+        android:id="@+id/surnameReg"
+        android:layout_width="290dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@id/nameReg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:background="@android:drawable/gallery_thumb"
+        android:hint=" Soyad"
+        android:textAlignment="viewStart"
+        android:textColor="#3F51B5"
+        android:textColorHint="@android:color/primary_text_dark"
+        android:textSize="13sp"
+        android:typeface="monospace" />
+
+    <Button
+        android:id="@+id/registerReg"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/passwordReg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#3F51B5"
+        android:hint="@string/register"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="18sp" />
+
+    <!--    <Button-->
+    <!--        android:id="@+id/registerReg"-->
+    <!--        android:layout_width="76dp"-->
+    <!--        android:layout_height="35dp"-->
+    <!--        android:layout_alignTop="@+id/passwordReg"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="62dp"-->
+    <!--        android:background="@android:color/holo_green_dark"-->
+    <!--        android:text="@string/register"-->
+    <!--        android:textColor="@android:color/background_light" />-->
+
+
+</RelativeLayout>
