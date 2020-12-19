@@ -5,11 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.codist.MainActivity;
 import com.example.codist.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterPage extends MainActivity {
     private Button registerButton;
@@ -23,6 +29,7 @@ public class RegisterPage extends MainActivity {
     private String email;
     private String password;
     private AppCompatActivity act;
+    FirebaseAuth auth;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +40,13 @@ public class RegisterPage extends MainActivity {
         passwordEdit = (EditText) findViewById(R.id.passwordReg);
         nameEdit = (EditText) findViewById(R.id.nameReg);
         surnameEdit = (EditText) findViewById(R.id.surnameReg);
+        auth = FirebaseAuth.getInstance();
+
+        if(auth.getCurrentUser() != null) {
+            Toast.makeText(RegisterPage.this, "User Already Logged In.", Toast.LENGTH_SHORT).show();
+            changeActivity(MainActivity.getInstance().openHomePage());
+            finish(); //
+        }
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,9 +88,18 @@ public class RegisterPage extends MainActivity {
                     passwordEdit.setError(MainActivity.getInstance().controlPasswordRegister(password));
                 }
                 if (counter == 4) {
-                    changeActivity(MainActivity.getInstance().openLoginPage());
+                    auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()) {
+                                Toast.makeText(RegisterPage.this, "User Created.", Toast.LENGTH_SHORT).show();
+                                changeActivity(MainActivity.getInstance().openLoginPage());
+                            }else {
+                                Toast.makeText(RegisterPage.this, "ERROR! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
-
 
             }
         });

@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "572268641553",
+    "firebase_url": "https://deneme-a4a1e-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "deneme-a4a1e",
+    "storage_bucket": "deneme-a4a1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572268641553:android:be6e2d1aa1137ac84ca0b0",
+        "android_client_info": {
+          "package_name": "com.example.codist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572268641553-mak3fhpkiilulrskg8lhtf6tihcb36nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxgrd9h5HKZrLtZC4inRPV0h1ghxNbf_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572268641553-mak3fhpkiilulrskg8lhtf6tihcb36nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572268641553:android:e58ec8a8a22bf0a24ca0b0",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572268641553-mak3fhpkiilulrskg8lhtf6tihcb36nk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxgrd9h5HKZrLtZC4inRPV0h1ghxNbf_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572268641553-mak3fhpkiilulrskg8lhtf6tihcb36nk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
