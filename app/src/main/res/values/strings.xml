@@ -6,4 +6,5 @@
     <string name="login">giriş</string>
     <string name="register">üye ol</string>
     <string name="covid_test_sonucu">Covid Test Sonucu :</string>
+    <string name="signout">sign out</string>
 </resources>
