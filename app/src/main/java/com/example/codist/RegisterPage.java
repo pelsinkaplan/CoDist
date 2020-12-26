@@ -13,9 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.codist.MainActivity;
 import com.example.codist.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterPage extends MainActivity {
     private Button registerButton;
@@ -30,6 +36,8 @@ public class RegisterPage extends MainActivity {
     private String password;
     private AppCompatActivity act;
     FirebaseAuth auth;
+    FirebaseFirestore store;
+    String uid;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +49,8 @@ public class RegisterPage extends MainActivity {
         nameEdit = (EditText) findViewById(R.id.nameReg);
         surnameEdit = (EditText) findViewById(R.id.surnameReg);
         auth = FirebaseAuth.getInstance();
+        store = FirebaseFirestore.getInstance();
+
 
         if(auth.getCurrentUser() != null) {
             Toast.makeText(RegisterPage.this, "User Already Logged In.", Toast.LENGTH_SHORT).show();
@@ -93,6 +103,17 @@ public class RegisterPage extends MainActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
                                 Toast.makeText(RegisterPage.this, "User Created.", Toast.LENGTH_SHORT).show();
+                                uid = auth.getCurrentUser().getUid();
+                                DocumentReference documentReference = store.collection("users").document(uid);
+                                Map<String,Object> user = new HashMap<>();
+                                user.put("name",name);
+                                user.put("surname",surname);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        System.out.println("user profile is created");
+                                    }
+                                });
                                 changeActivity(MainActivity.getInstance().openLoginPage());
                             }else {
                                 Toast.makeText(RegisterPage.this, "ERROR! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
