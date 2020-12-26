@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     public Class openLoginPage() {
         return LoginPage.class;
     }
+    public Class openLocationPage() {
+        return LocationPage.class;
+    }
 
     /***************check user methods***************/
     public String controlNameRegister(String name) {

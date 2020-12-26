@@ -9,12 +9,14 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission
         android:name="android.permission.BLUETOOTH_PRIVILEGED"
         tools:ignore="ProtectedPermissions" />
 
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -25,6 +27,11 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:hardwareAccelerated="false"
         android:largeHeap="true">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDfmj1jCUYc386bk75ftg9AE74glqJwY04"/>
+
         <activity android:name=".LoginPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +43,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".HomePage"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name=".LocationPage"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 

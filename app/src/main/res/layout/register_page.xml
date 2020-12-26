@@ -93,19 +93,6 @@
         android:textSize="13sp"
         android:typeface="monospace" />
 
-    <Button
-        android:id="@+id/registerReg"
-        android:layout_width="100dp"
-        android:layout_height="45dp"
-        android:layout_below="@+id/passwordReg"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="#3F51B5"
-        android:hint="@string/register"
-        android:textAlignment="center"
-        android:textColorHint="@android:color/background_light"
-        android:textSize="18sp" />
-
     <!--    <Button-->
     <!--        android:id="@+id/registerReg"-->
     <!--        android:layout_width="76dp"-->
@@ -116,6 +103,34 @@
     <!--        android:background="@android:color/holo_green_dark"-->
     <!--        android:text="@string/register"-->
     <!--        android:textColor="@android:color/background_light" />-->
+
+    <Button
+        android:id="@+id/registerReg"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/passwordReg"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="135dp"
+        android:layout_marginEnd="157dp"
+        android:backgroundTint="#3F51B5"
+        android:hint="@string/register"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/locationmap"
+        android:layout_width="139dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="380dp"
+        android:layout_marginEnd="56dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Haritadan Seç"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

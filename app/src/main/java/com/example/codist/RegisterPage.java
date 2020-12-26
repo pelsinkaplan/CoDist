@@ -9,9 +9,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.codist.MainActivity;
 import com.example.codist.R;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +36,7 @@ public class RegisterPage extends MainActivity {
     private String surname;
     private String email;
     private String password;
+    private Button mapbutton;
     private AppCompatActivity act;
     FirebaseAuth auth;
     FirebaseFirestore store;
@@ -50,7 +53,14 @@ public class RegisterPage extends MainActivity {
         surnameEdit = (EditText) findViewById(R.id.surnameReg);
         auth = FirebaseAuth.getInstance();
         store = FirebaseFirestore.getInstance();
+        mapbutton = (Button) findViewById(R.id.locationmap);
 
+        mapbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(MainActivity.getInstance().openLocationPage());
+            }
+        });
 
         if(auth.getCurrentUser() != null) {
             Toast.makeText(RegisterPage.this, "User Already Logged In.", Toast.LENGTH_SHORT).show();
