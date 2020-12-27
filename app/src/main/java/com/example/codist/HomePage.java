@@ -76,15 +76,18 @@ public class HomePage extends MainActivity {
         auth = FirebaseAuth.getInstance();
         store = FirebaseFirestore.getInstance();
         uid = auth.getUid();
-        btnDiscover();
-        btnDiscover();
+        userLocation = new Location("");
+        loc = new Location("");
+//        btnDiscover();
+//        btnDiscover();
         store.collection("users").document(uid).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 assert value != null;
                 condition.setChecked(value.getBoolean("korona"));
                 if(value.get("lat") != null && value.get("long") != null) {
-                    System.out.println((Double) value.get("lat"));
+                    userLocation.setLatitude(value.getDouble("lat"));
+                    userLocation.setLongitude(value.getDouble("long"));
                 }
 
             }
@@ -107,8 +110,8 @@ public class HomePage extends MainActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        System.out.println(document.getData().get("lat"));
-                        System.out.println(document.getData().get("long"));
+                        loc.setLatitude((Double) document.getData().get("lat"));
+                        loc.setLongitude((Double) document.getData().get("long"));
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
