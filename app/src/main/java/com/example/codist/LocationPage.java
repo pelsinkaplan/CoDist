@@ -34,26 +34,50 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private Button backbutton;
-
-  /*  public void addListenerOnButton(View v) {
-
-        backbutton = (Button) v.findViewById(R.id.backbuttonlocation); //getting error here in //findViewById
-
-        backbutton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                changeActivity(MainActivity.getInstance().openRegisterPage());
-
-            }
-        });
-
-    }*/
+    private Button current_loc;
+    private Button map_loc;
+    private double current_lat;
+    private double current_long;
+    private double marker_lat;
+    private double marker_long;
+    GoogleMap googleMap ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_page);
+        backbutton = (Button) findViewById(R.id.backbuttonlocation);
+        current_loc = (Button) findViewById(R.id.current_location);
+        map_loc = (Button) findViewById(R.id.map_location);
+    //    googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map).getM);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(MainActivity.getInstance().openRegisterPage());
+            }
+        });
+
+        current_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchLastLocation();
+                Toast.makeText(getApplicationContext(), current_lat + "" + current_long, Toast.LENGTH_LONG).show();
+                //System.out.println(current_lat + " : " + current_long);
+                finish();
+            }
+        });
+
+     /*   map_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMapReady(googleMap);
+               Toast.makeText(getApplicationContext(), marker_lat + "" + marker_long, Toast.LENGTH_SHORT).show();
+                System.out.println("marker latitude" + marker_lat);
+                finish();
+            }
+        });*/
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();
@@ -74,12 +98,14 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if(location != null){
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-                            + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
+                    //        + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.google_map);
 
                     supportMapFragment.getMapAsync(LocationPage.this);
+                    current_lat = currentLocation.getLatitude();
+                    current_long = currentLocation.getLongitude();
                 }
             }
         });
@@ -107,6 +133,9 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
                 // add marker on map
                 googleMap.addMarker(markerOptions);
 
+                marker_lat = latLng.latitude;
+                marker_long = latLng.longitude;
+                System.out.println("marker longitude " + marker_long);
             }
         });
     }

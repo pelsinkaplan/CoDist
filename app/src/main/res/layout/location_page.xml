@@ -17,6 +17,32 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/back" />
 
+    <Button
+        android:id="@+id/current_location"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="152dp"
+        android:backgroundTint="#3F51B5"
+        android:hint="anlık konum"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/map_location"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#3F51B5"
+        android:hint="haritadan seç"
+        android:textAlignment="center"
+        android:textColorHint="@android:color/background_light"
+        android:textSize="12sp"/>
+
     <fragment
         android:id="@+id/google_map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
