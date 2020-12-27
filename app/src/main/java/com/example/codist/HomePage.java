@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -37,6 +39,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +65,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class HomePage extends MainActivity {
+public class HomePage extends MainActivity implements OnMapReadyCallback {
+
     private static final String TAG = "bluetooth";
     FirebaseAuth auth;
     FirebaseFirestore store;
@@ -83,15 +93,20 @@ public class HomePage extends MainActivity {
         store.collection("users").document(uid).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                assert value != null;
-                condition.setChecked(value.getBoolean("korona"));
-                if(value.get("lat") != null && value.get("long") != null) {
-                    userLocation.setLatitude(value.getDouble("lat"));
-                    userLocation.setLongitude(value.getDouble("long"));
+                if(value != null){
+                    condition.setChecked(value.getBoolean("korona"));
+                    if (value.get("lat") != null && value.get("long") != null) {
+                        userLocation.setLatitude(value.getDouble("lat"));
+                        userLocation.setLongitude(value.getDouble("long"));
+                    }
                 }
-
             }
         });
+
+        // Get the SupportMapFragment and request notification when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         // kullanıcı giriş yapmamışsa login sayfasına gönder
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -223,5 +238,42 @@ public class HomePage extends MainActivity {
 
     public void changeActivity(Class className) {
         startActivity(new Intent(this, className));
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap googleMap) {
+        MarkerOptions marker = new MarkerOptions();
+
+        LatLng user1 = new LatLng(41.01011047, 29.07791846);
+
+        googleMap.addMarker(marker.position(user1)
+                .title("user1 --> "+ user1.latitude + ":" + user1.longitude)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
+                .alpha(0.8f)
+                .flat(true));
+
+        LatLng user2 = new LatLng(41.01001047, 29.07788846);
+        googleMap.addMarker(marker.position(user2)
+                .title("user2 --> "+ user2.latitude + ":" + user2.longitude)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
+                .alpha(0.8f)
+                .flat(true));
+
+        LatLng user3 = new LatLng(41.00992247, 29.07803846);
+        googleMap.addMarker(marker.position(user3)
+                .title("user3 --> "+ user3.latitude + ":" + user3.longitude)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
+                .alpha(0.8f)
+                .flat(true));
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                user1,17
+        ));
+    }
+
+    public Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 }
