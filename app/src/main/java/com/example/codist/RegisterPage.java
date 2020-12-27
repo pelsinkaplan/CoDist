@@ -1,6 +1,7 @@
 package com.example.codist;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,7 @@ public class RegisterPage extends MainActivity {
     FirebaseAuth auth;
     FirebaseFirestore store;
     String uid;
+    double la,lo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +57,17 @@ public class RegisterPage extends MainActivity {
         store = FirebaseFirestore.getInstance();
         mapbutton = (Button) findViewById(R.id.locationmap);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            la = extras.getDouble("lat");
+            lo = extras.getDouble("long");
+        }
+
         mapbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 changeActivity(MainActivity.getInstance().openLocationPage());
+                finish();
             }
         });
 
@@ -72,6 +81,7 @@ public class RegisterPage extends MainActivity {
             @Override
             public void onClick(View v) {
                 changeActivity(MainActivity.getInstance().openLoginPage());
+                finish();
             }
         });
 
@@ -118,6 +128,9 @@ public class RegisterPage extends MainActivity {
                                 Map<String,Object> user = new HashMap<>();
                                 user.put("name",name);
                                 user.put("surname",surname);
+                                user.put("korona",false);
+                                user.put("lat", la);
+                                user.put("long",lo);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

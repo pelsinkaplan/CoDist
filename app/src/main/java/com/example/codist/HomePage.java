@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -29,33 +30,98 @@ import android.widget.EditText;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class HomePage extends MainActivity {
     private static final String TAG = "bluetooth";
+    FirebaseAuth auth;
+    FirebaseFirestore store;
     BluetoothAdapter mBluetoothAdapter;
     String body;
+    Switch condition;
+    String uid;
+    Location userLocation;
+    Location loc;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        condition = findViewById(R.id.switch1);
+        auth = FirebaseAuth.getInstance();
+        store = FirebaseFirestore.getInstance();
+        uid = auth.getUid();
+        btnDiscover();
+        btnDiscover();
+        store.collection("users").document(uid).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                assert value != null;
+                condition.setChecked(value.getBoolean("korona"));
+                if(value.get("lat") != null && value.get("long") != null) {
+                    System.out.println((Double) value.get("lat"));
+                }
 
+            }
+        });
 
         // kullanıcı giriş yapmamışsa login sayfasına gönder
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             changeActivity(MainActivity.getInstance().openLoginPage());
             finish();
         }
+
+        // Create a reference to the cities collection
+        CollectionReference citiesRef = store.collection("users");
+
+    // Create a query against the collection.
+        Query query = citiesRef.whereEqualTo("korona", true);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        System.out.println(document.getData().get("lat"));
+                        System.out.println(document.getData().get("long"));
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        condition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                store.collection("users").document(uid).update("korona",isChecked);
+            }
+        });
     }
 
     private BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
@@ -104,7 +170,7 @@ public class HomePage extends MainActivity {
         }
     }
 
-    public void btnDiscover(View view) {
+    public void btnDiscover() {
         //Checken ob Bluetooth an ist
         if (mBluetoothAdapter == null) {
             Log.d(TAG, "enableDisableBT: Does not have Bluetooth capabilities");

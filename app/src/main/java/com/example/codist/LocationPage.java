@@ -63,7 +63,7 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 fetchLastLocation();
                 Toast.makeText(getApplicationContext(), current_lat + "" + current_long, Toast.LENGTH_LONG).show();
-                //System.out.println(current_lat + " : " + current_long);
+                changeActivity(MainActivity.getInstance().openRegisterPage());
                 finish();
             }
         });
@@ -152,6 +152,9 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void changeActivity(Class className) {
-        startActivity(new Intent(this, className));
+        Intent intent  = new Intent(this, className);
+        intent.putExtra("lat", current_lat);
+        intent.putExtra("long", current_long);
+        startActivity(intent);
     }
 }
