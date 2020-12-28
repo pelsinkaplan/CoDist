@@ -76,6 +76,10 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
     String uid;
     Location userLocation;
     Location loc;
+    ArrayList<Double> locOfRedDost = new ArrayList<>();
+    GoogleMap mGoogleMap;
+    SupportMapFragment mapFragment;
+    private List<MarkerOptions> marker;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +90,7 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
         auth = FirebaseAuth.getInstance();
         store = FirebaseFirestore.getInstance();
         uid = auth.getUid();
+        marker = new ArrayList<>();
         userLocation = new Location("");
         loc = new Location("");
 //        btnDiscover();
@@ -93,7 +98,7 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
         store.collection("users").document(uid).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value != null){
+                if (value != null) {
                     condition.setChecked(value.getBoolean("korona"));
                     if (value.get("lat") != null && value.get("long") != null) {
                         userLocation.setLatitude(value.getDouble("lat"));
@@ -103,21 +108,10 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
             }
         });
 
-        // Get the SupportMapFragment and request notification when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        // kullanıcı giriş yapmamışsa login sayfasına gönder
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            changeActivity(MainActivity.getInstance().openLoginPage());
-            finish();
-        }
-
         // Create a reference to the cities collection
         CollectionReference citiesRef = store.collection("users");
 
-    // Create a query against the collection.
+        // Create a query against the collection.
         Query query = citiesRef.whereEqualTo("korona", true);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -127,17 +121,32 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
                         Log.d(TAG, document.getId() + " => " + document.getData());
                         loc.setLatitude((Double) document.getData().get("lat"));
                         loc.setLongitude((Double) document.getData().get("long"));
+                        Log.d("TAG", "coronalı" + loc.getLatitude() + " " + loc.getLongitude());
+                        locOfRedDost.add(loc.getLongitude());
+                        locOfRedDost.add(loc.getLatitude());
                     }
+                    // Get the SupportMapFragment and request notification when the map is ready to be used.
+                    mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.map);
+                    mapFragment.getMapAsync(HomePage.this::onMapReady);
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
 
+
+        // kullanıcı giriş yapmamışsa login sayfasına gönder
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            changeActivity(MainActivity.getInstance().openLoginPage());
+            finish();
+        }
+
+
         condition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                store.collection("users").document(uid).update("korona",isChecked);
+                store.collection("users").document(uid).update("korona", isChecked);
             }
         });
     }
@@ -242,37 +251,48 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        MarkerOptions marker = new MarkerOptions();
-
-        LatLng user1 = new LatLng(41.01011047, 29.07791846);
-
-        googleMap.addMarker(marker.position(user1)
-                .title("user1 --> "+ user1.latitude + ":" + user1.longitude)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
+        mGoogleMap = googleMap;
+        LatLng user1 = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+        marker.add(new MarkerOptions());
+        mGoogleMap.addMarker(marker.get(0).position(user1)
+                .title("user1 --> " + user1.latitude + ":" + user1.longitude)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
                 .alpha(0.8f)
                 .flat(true));
+        Log.d("AAAAAAAAAAAAAAAA", "BULDUUUUUUMMMMMMMM!!!!!!" + locOfRedDost.size());
+        for (int i = 0; i < locOfRedDost.size(); i++) {
+            Log.d("TAG", "BULDUUUUUUMMMMMMMM!!!!!!" + loc.getLatitude() + " " + loc.getLongitude());
+            if (i % 2 == 1) {
+                LatLng user = new LatLng(locOfRedDost.get(i - 1), locOfRedDost.get(i));
+                marker.add(new MarkerOptions());
+                mGoogleMap.addMarker(marker.get(i / 2 + 1).position(user)
+                        .title("user --> " + user.latitude + ":" + user.longitude)
+                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
+                        .alpha(0.8f)
+                        .flat(true));
+            }
+        }
+//        LatLng user2 = new LatLng(41.01001047, 29.07788846);
+//        googleMap.addMarker(marker.position(user2)
+//                .title("user2 --> " + user2.latitude + ":" + user2.longitude)
+//                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
+//                .alpha(0.8f)
+//                .flat(true));
+//
+//        LatLng user3 = new LatLng(41.00992247, 29.07803846);
+//        googleMap.addMarker(marker.position(user3)
+//                .title("user3 --> " + user3.latitude + ":" + user3.longitude)
+//                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
+//                .alpha(0.8f)
+//                .flat(true));
 
-        LatLng user2 = new LatLng(41.01001047, 29.07788846);
-        googleMap.addMarker(marker.position(user2)
-                .title("user2 --> "+ user2.latitude + ":" + user2.longitude)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
-                .alpha(0.8f)
-                .flat(true));
-
-        LatLng user3 = new LatLng(41.00992247, 29.07803846);
-        googleMap.addMarker(marker.position(user3)
-                .title("user3 --> "+ user3.latitude + ":" + user3.longitude)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot",50,50)))
-                .alpha(0.8f)
-                .flat(true));
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                user1,17
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                user1, 17
         ));
     }
 
-    public Bitmap resizeMapIcons(String iconName,int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+    public Bitmap resizeMapIcons(String iconName, int width, int height) {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }
