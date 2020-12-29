@@ -1,6 +1,7 @@
 package com.example.codist;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -43,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -59,7 +61,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +98,31 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
         marker = new ArrayList<>();
         userLocation = new Location("");
         loc = new Location("");
-//        btnDiscover();
-//        btnDiscover();
+
+        if (mBluetoothAdapter == null) {
+            Log.d(TAG, "enableDisableBT: Does not have Bluetooth capabilities");
+        }
+        if (!(mBluetoothAdapter.isEnabled())) {
+            Log.d(TAG, "enableDisableBT: enabling BT.");
+            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(enableBTIntent);
+        }
+
+        checkBTPermissions();
+
+        btnDiscover();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 30 seconds
+                btnDiscover();
+                handler.postDelayed(this, 15000);
+            }
+        }, 20000);  //the time is in miliseconds
+
+
         store.collection("users").document(uid).addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -151,7 +179,7 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
         });
     }
 
-    private BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -164,7 +192,7 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
                 Log.d(TAG, "onReceive: " + device.getName() + ": " + device.getAddress());
                 Log.d(TAG, "meters: " + meters + ": " + device.getName());
                 if (meters < 0.9) {
-                    body = "Sosyal Mesafe İhlali! (" + device.getName() + ")";
+                    body = "Sosyal Mesafe İhlali!";
                     notification();
                 }
             }
@@ -199,29 +227,21 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
 
     public void btnDiscover() {
         //Checken ob Bluetooth an ist
-        if (mBluetoothAdapter == null) {
-            Log.d(TAG, "enableDisableBT: Does not have Bluetooth capabilities");
-        }
-        if (!(mBluetoothAdapter.isEnabled())) {
-            Log.d(TAG, "enableDisableBT: enabling BT.");
-            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(enableBTIntent);
-        }
+
         Log.d(TAG, "btnDiscover: Looking for unpaired Devices");
         if (mBluetoothAdapter.isDiscovering()) {
             mBluetoothAdapter.cancelDiscovery();
             Log.d(TAG, "btnDiscover:Cancelling discovery.");
-            checkBTPermissions();
+
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
+            registerReceiver(mBroadcastReceiver, discoverDevicesIntent);
         }
 
         if (!(mBluetoothAdapter.isDiscovering())) {
-            checkBTPermissions();
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
+            registerReceiver(mBroadcastReceiver, discoverDevicesIntent);
         }
     }
 
@@ -252,16 +272,14 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        LatLng user1 = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+        LatLng currentUser = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
         marker.add(new MarkerOptions());
-        mGoogleMap.addMarker(marker.get(0).position(user1)
-                .title("user1 --> " + user1.latitude + ":" + user1.longitude)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
+        mGoogleMap.addMarker(marker.get(0).position(currentUser)
+                .title("currentUser --> " + currentUser.latitude + ":" + currentUser.longitude)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("green_dot", 50, 50)))
                 .alpha(0.8f)
                 .flat(true));
-        Log.d("AAAAAAAAAAAAAAAA", "BULDUUUUUUMMMMMMMM!!!!!!" + locOfRedDost.size());
         for (int i = 0; i < locOfRedDost.size(); i++) {
-            Log.d("TAG", "BULDUUUUUUMMMMMMMM!!!!!!" + loc.getLatitude() + " " + loc.getLongitude());
             if (i % 2 == 1) {
                 LatLng user = new LatLng(locOfRedDost.get(i - 1), locOfRedDost.get(i));
                 marker.add(new MarkerOptions());
@@ -272,22 +290,9 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
                         .flat(true));
             }
         }
-//        LatLng user2 = new LatLng(41.01001047, 29.07788846);
-//        googleMap.addMarker(marker.position(user2)
-//                .title("user2 --> " + user2.latitude + ":" + user2.longitude)
-//                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
-//                .alpha(0.8f)
-//                .flat(true));
-//
-//        LatLng user3 = new LatLng(41.00992247, 29.07803846);
-//        googleMap.addMarker(marker.position(user3)
-//                .title("user3 --> " + user3.latitude + ":" + user3.longitude)
-//                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("red_dot", 50, 50)))
-//                .alpha(0.8f)
-//                .flat(true));
 
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                user1, 17
+                currentUser, 17
         ));
     }
 
