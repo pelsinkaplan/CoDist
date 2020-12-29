@@ -40,7 +40,6 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
     private double current_long;
     private double marker_lat;
     private double marker_long;
-    GoogleMap googleMap ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,6 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
         backbutton = (Button) findViewById(R.id.backbuttonlocation);
         current_loc = (Button) findViewById(R.id.current_location);
         map_loc = (Button) findViewById(R.id.map_location);
-    //    googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map).getM);
 
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,16 +66,15 @@ public class LocationPage extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-     /*   map_loc.setOnClickListener(new View.OnClickListener() {
+        map_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMapReady(googleMap);
-               Toast.makeText(getApplicationContext(), marker_lat + "" + marker_long, Toast.LENGTH_SHORT).show();
-                System.out.println("marker latitude" + marker_lat);
-                finish();
+               Toast.makeText(getApplicationContext(), marker_lat + " : " + marker_long, Toast.LENGTH_SHORT).show();
+              // System.out.println("marker latitude : " + marker_lat);
+               changeActivity(MainActivity.getInstance().openRegisterPage());
+               finish();
             }
-        });*/
-
+        });
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLastLocation();

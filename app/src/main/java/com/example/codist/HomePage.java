@@ -203,7 +203,7 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
         NotificationManager notif = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notify = new Notification.Builder
                 (getApplicationContext()).setContentText(body).
-                setContentTitle("CoDist").setSmallIcon(R.drawable.common_google_signin_btn_icon_dark).build();
+                setContentTitle("CoDist").setSmallIcon(R.drawable.logo).build();
 
         notify.flags |= Notification.FLAG_AUTO_CANCEL;
         notif.notify(0, notify);
