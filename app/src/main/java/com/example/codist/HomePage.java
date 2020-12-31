@@ -147,8 +147,8 @@ public class HomePage extends MainActivity implements OnMapReadyCallback {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Log.d(TAG, document.getId() + " => " + document.getData());
-                        loc.setLatitude((Double) document.getData().get("lat"));
-                        loc.setLongitude((Double) document.getData().get("long"));
+                        loc.setLatitude((Double) document.getDouble("lat"));
+                        loc.setLongitude((Double) document.getDouble("long"));
                         Log.d("TAG", "coronalı" + loc.getLatitude() + " " + loc.getLongitude());
                         locOfRedDost.add(loc.getLongitude());
                         locOfRedDost.add(loc.getLatitude());
